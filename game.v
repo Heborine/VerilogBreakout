@@ -11,6 +11,10 @@ module Top(
     reg reset_prev;
     reg [16:0] debounce_count_reset;
 
+    function automatic void [6:0] increment_score (input [6:0] score, input [6:0] point_inc);
+        score = score + point_inc;
+    endfunction
+
     always @(posedge clk) begin
         reset_sync1 <= rst;
         reset_sync2 <= reset_sync1;

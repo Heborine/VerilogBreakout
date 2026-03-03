@@ -1,4 +1,4 @@
-module Top(
+module Game_Logic(
         input clk, // 100 MHz clock
         input rst,
         output reg [6:0] seg,

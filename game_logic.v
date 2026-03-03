@@ -4,40 +4,48 @@ module Game_Logic(
         output reg [6:0] seg,
         output reg [3:0] an
     );
-    reg [6:0] score;
+    reg [13:0] score;
     reg reset_sync1;
     reg reset_sync2;
     reg reset_debounce;
     reg reset_prev;
     reg [16:0] debounce_count_reset;
     reg [19:0] refresh_counter;
+    reg [3:0] LED_DISP;
 
-    function automatic void [6:0] increment_score (input [6:0] score, input [6:0] point_inc);
-        score = score + point_inc;
-    endfunction
+    task automatic increment_score;
+        inout [13:0] score;
+        input [13:0] point_inc;
+        begin
+            score = score + point_inc;
+        end
+    endtask
 
     always @(posedge clk) begin
         refresh_counter <= refresh_counter + 1;
         reset_sync1 <= rst;
         reset_sync2 <= reset_sync1;
-    end
 
-    if(reset_debounce != reset_sync2) begin
-        debounce_count_reset <= debounce_count_reset + 1;
-        //1ms = 0.001s 
-        //0.001 * 100000000 = 100000 cycles
-        if(debounce_count_reset >= 17'd100000) begin
-             debounce_count_reset <= 0;
-             reset_debounce <= reset_sync2;
+        if(reset_debounce != reset_sync2) begin
+            debounce_count_reset <= debounce_count_reset + 1;
+            //1ms = 0.001s 
+            //0.001 * 100000000 = 100000 cycles
+            if(debounce_count_reset >= 17'd100000) begin
+                debounce_count_reset <= 0;
+                reset_debounce <= reset_sync2;
+            end
+        end else begin
+            debounce_count_reset <= 0;
         end
-    end else begin
-        debounce_count_reset <= 0;
-    end
 
-    reset_prev <= reset_debounce;
+        reset_prev <= reset_debounce;
 
-    if (reset_debounce && !reset_prev) begin
-        refresh_counter <= 0;
+        if (reset_debounce && !reset_prev) begin
+            refresh_counter <= 0;
+            score <= 0;
+        end else begin
+            refresh_counter <= refresh_counter + 1;
+        end
     end
 
     assign LED_activating_counter = refresh_counter[19:18];
@@ -46,21 +54,22 @@ module Game_Logic(
         case(LED_activating_counter)
             2'b00: begin
                 an <= 4'b0111;
-                LED_DISP <= mins/10;
+                LED_DISP <= (score / 1000) % 10;
             end
             2'b01: begin
-                LED_DISP <= mins%10;
+                an <= 4'b1011;
+                LED_DISP <= (score / 100) % 10;
             end
             2'b10: begin
                 an <= 4'b1101;
-                LED_DISP <= secs/10;
+                LED_DISP <= (score / 10) % 10;
             end
             2'b11: begin
                 an <= 4'b1110;
-                LED_DISP <= secs%10;
+                LED_DISP <= (score) % 10;
             end
             default: begin
-                LED_DISP <= mins/10;
+                LED_DISP <= 0;
             end
         endcase
     end

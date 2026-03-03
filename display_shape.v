@@ -11,7 +11,7 @@ module display_shape (
 
     input wire [2:0] redVal,
     input wire [2:0] greenVal,
-    input wire [1:0] blueVal, //copilot says that fpga vga tends to only use 2 bits here
+    input wire [1:0] blueVal, 
 
     output wire inShape,
     output wire [2:0] redOut,

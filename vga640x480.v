@@ -25,7 +25,7 @@ module vga640x480(
 	output wire vsync,		//vertical sync out
 	output reg [2:0] red,	//red vga output
 	output reg [2:0] green, //green vga output
-	output reg [1:0] blue	//blue vga output
+	output reg [1:0] blue,	//blue vga output
 	output wire [9:0] pixelX,
 	output wire [9:0] pixelY,
 	output wire valid_drawing_region

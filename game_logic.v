@@ -1,9 +1,32 @@
 module Game_Logic(
         input clk, // 100 MHz clock
         input rst,
+
+        //coordinates
+        output reg [9:0] ballXcoord,
+        output reg [9:0] ballYcoord,
+        output reg [9:0] playerXcoord,
+
+        // 7-segment display
         output reg [6:0] seg,
         output reg [3:0] an
     );
+    
+    localparam SCREEN_WIDTH = 640;
+    localparam SCREEN_HEIGHT = 480;
+    
+    localparam BALL_SIZE = 5;
+    localparam BALL_SPEED = 1;
+    localparam PADDLE_WIDTH = SCREEN_WIDTH / 10;
+    localparam PADDLE_HEIGHT = SCREEN_HEIGHT / 48;
+    localparam PADDLE_Y_COORD = SCREEN_HEIGHT - 20;
+    localparam PADDLE_SPEED = 1;
+
+    localparam ROWS = 5;
+    localparam COLUMNS = 10;
+    localparam BRICK_WIDTH = 52;
+    localparam BRICK_HEIGHT = 12;
+
     reg [13:0] score;
     reg reset_sync1;
     reg reset_sync2;

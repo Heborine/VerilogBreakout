@@ -1,8 +1,8 @@
 module display_shape (
     input wire enabled,
     
-    input pixelX[9:0],
-    input pixelY[9:0],
+    input wire pixelX[9:0],
+    input wire pixelY[9:0],
 
     input wire [9:0] lowerX,
     input wire [9:0] lowerY,

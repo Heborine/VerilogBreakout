@@ -37,11 +37,13 @@ module top (
     );
 
     wire [9:0] playerX, playerY, pWidth, pHeight;
+    wire [49:0] activeBricks;
     Game_Logic game (
         .clk(clk),
         .rst(rst),
         .btnL(btnL),
         .btnR(btnR),
+        .activeBricks(activeBricks),
         .playerXcoord(playerX),
         .playerYcoord(playerY),
         .paddleWidth(pWidth),

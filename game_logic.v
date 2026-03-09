@@ -1,11 +1,14 @@
 module Game_Logic(
-        input clk, // 100 MHz clock
-        input rst,
-
-input btnL,
+    input clk, // 100 MHz clock
+    
+    // Buttons
+    input rst,
+    input btnL,
     input btnR,
 
-    //coordinates
+    output reg [49:0] activeBricks;
+
+    // Coordinates
     output reg [9:0] ballXcoord,
     output reg [9:0] ballYcoord,
     output reg [9:0] playerXcoord,
@@ -13,9 +16,9 @@ input btnL,
     output reg [9:0] paddleWidth,  
     output reg [9:0] paddleHeight, 
 
-        // 7-segment display
-        output reg [6:0] seg,
-        output reg [3:0] an
+    // 7-Segment Display
+    output reg [6:0] seg,
+    output reg [3:0] an
     );
     
     localparam SCREEN_WIDTH = 640;
@@ -140,6 +143,5 @@ input btnL,
             end
         end
     end
-
 
 endmodule

@@ -9,9 +9,9 @@ input btnL,
     output reg [9:0] ballXcoord,
     output reg [9:0] ballYcoord,
     output reg [9:0] playerXcoord,
-    output [9:0] playerYcoord, // NEW: paddle Y coord
-    output [9:0] paddleWidth,  // NEW: constants for renderer
-    output [9:0] paddleHeight, // NEW: constants for renderer
+    output reg [9:0] playerYcoord, 
+    output reg [9:0] paddleWidth,  
+    output reg [9:0] paddleHeight, 
 
         // 7-segment display
         output reg [6:0] seg,
@@ -45,6 +45,9 @@ input btnL,
     reg [16:0] debounce_count_reset;
     reg [19:0] refresh_counter;
     reg [3:0] LED_DISP;
+
+    reg [5:0] ballDirX;
+    reg [5:0] ballDirY;
 
     task automatic increment_score;
         inout [13:0] score;
@@ -128,7 +131,7 @@ input btnL,
     always @(posedge clk) begin //input and movement clock
         if (rst) begin
             playerXcoord <= (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
-        end else if (refresh_counter[16]) begin // Basic timer tick (~60Hz on 100MHz clock)
+        end else if (refresh_counter[16]) begin // only counts at refresh rate
             if(btnL && playerXcoord > 0)begin
                 playerXcoord <= playerXcoord - PADDLE_SPEED;
             end
@@ -136,10 +139,6 @@ input btnL,
                 playerXcoord <= playerXcoord + PADDLE_SPEED;
             end
         end
-    end
-
-    always@(posedge clk) begin //graphics display
-
     end
 
 

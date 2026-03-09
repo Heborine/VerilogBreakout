@@ -38,12 +38,15 @@ module top (
 
     wire [9:0] playerX, playerY, pWidth, pHeight;
     wire [49:0] activeBricks;
+    wire [9:0] bWidth, bHeight;
     Game_Logic game (
         .clk(clk),
         .rst(rst),
         .btnL(btnL),
         .btnR(btnR),
         .activeBricks(activeBricks),
+        .brickWidth(bWidth),
+        .brickHeight(bHeight),
         .playerXcoord(playerX),
         .playerYcoord(playerY),
         .paddleWidth(pWidth),
@@ -73,9 +76,34 @@ module top (
         .blueOut(pBlue)
     );
 
+    integer i;
+    wire [49:0] brick_hits;
+    genvar row, col;
+    generate
+        for (row = 0; row < 5; row = row + 1) begin : row_loop
+            for (col = 0; col < 10; col = col + 1) begin : col_loop
+                display_shape brick_inst (
+                    .enabled(active_video && activeBricks[row*10 + col]),
+                    .pixelX(pixelX),
+                    .pixelY(pixelY),
+                    .lowerX(10'd60 + col * (bWidth + 2)),
+                    .lowerY(10'd40 + row * (bHeight + 2)),
+                    .upperX(10'd60 + col * (bWidth + 2) + bWidth),
+                    .upperY(10'd40 + row * (bHeight + 2) + bHeight),
+                    .redVal(3'b111),   // Red bricks
+                    .greenVal(3'b000),
+                    .blueVal(2'b00),
+                    .inShape(brick_hits[row*10 + col])
+                );
+            end
+        end
+    endgenerate
+
+    wire any_brick_on = |brick_hits;
+
     // Final VGA assignment
-    assign vgaRed   = paddle_on ? pRed   : 3'b000;
-    assign vgaGreen = paddle_on ? pGreen : 3'b000;
-    assign vgaBlue  = paddle_on ? pBlue  : 2'b00;
+    assign vgaRed   = paddle_on ? 3'b111 : (any_brick_on ? 3'b111 : 3'b000);
+    assign vgaGreen = paddle_on ? 3'b111 : 3'b000;
+    assign vgaBlue  = paddle_on ? 2'b11  : 2'b00;
 
 endmodule

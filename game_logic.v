@@ -6,7 +6,9 @@ module Game_Logic(
     input btnL,
     input btnR,
 
-    output reg [49:0] activeBricks;
+    output reg [49:0] activeBricks,
+    output [9:0] brickWidth,
+    output [9:0] brickHeight,
 
     // Coordinates
     output reg [9:0] ballXcoord,
@@ -39,6 +41,8 @@ module Game_Logic(
     assign playerYcoord = PADDLE_Y_COORD;
     assign paddleWidth = PADDLE_WIDTH;
     assign paddleHeight = PADDLE_HEIGHT;
+    assign brickWidth = BRICK_WIDTH;
+    assign brickHeight = BRICK_HEIGHT;
 
     reg [13:0] score;
     reg reset_sync1;
@@ -82,6 +86,7 @@ module Game_Logic(
         if (reset_debounce && !reset_prev) begin
             refresh_counter <= 0;
             score <= 0;
+            activeBricks <= 50'h3FFFFFFFFFFFF; // Reset all bricks to alive (2^50-1)
         end else begin
             refresh_counter <= refresh_counter + 1;
         end

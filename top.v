@@ -36,15 +36,44 @@ module top (
         .valid_drawing_region(active_video)
     );
 
-    // // Rectangle: x=[200,300), y=[150,220)
-    // wire rect_on;
-    // assign rect_on = active_video &&
-    //                  (pixelX >= 10'd200) && (pixelX < 10'd300) &&
-    //                  (pixelY >= 10'd150) && (pixelY < 10'd220);
+    wire [9:0] playerX, playerY, pWidth, pHeight;
+    Game_Logic game (
+        .clk(clk),
+        .rst(rst),
+        .btnL(btnL),
+        .btnR(btnR),
+        .playerXcoord(playerX),
+        .playerYcoord(playerY),
+        .paddleWidth(pWidth),
+        .paddleHeight(pHeight),
+        .seg(seg),
+        .an(an)
+    );
 
-    // // White rectangle on black background
-    // assign vgaRed   = rect_on ? 3'b111 : 3'b000;
-    // assign vgaGreen = rect_on ? 3'b111 : 3'b000;
-    // assign vgaBlue  = rect_on ? 2'b11  : 2'b00;
+    wire paddle_on;
+    wire [2:0] pRed, pGreen;
+    wire [1:0] pBlue;
+
+    display_shape paddle_render (
+        .enabled(active_video),
+        .pixelX(pixelX),
+        .pixelY(pixelY),
+        .lowerX(playerX),
+        .lowerY(playerY),
+        .upperX(playerX + pWidth),
+        .upperY(playerY + pHeight),
+        .redVal(3'b111), // White paddle
+        .greenVal(3'b111),
+        .blueVal(2'b11),
+        .inShape(paddle_on),
+        .redOut(pRed),
+        .greenOut(pGreen),
+        .blueOut(pBlue)
+    );
+
+    // Final VGA assignment
+    assign vgaRed   = paddle_on ? pRed   : 3'b000;
+    assign vgaGreen = paddle_on ? pGreen : 3'b000;
+    assign vgaBlue  = paddle_on ? pBlue  : 2'b00;
 
 endmodule

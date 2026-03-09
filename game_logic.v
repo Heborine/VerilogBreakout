@@ -2,10 +2,16 @@ module Game_Logic(
         input clk, // 100 MHz clock
         input rst,
 
-        //coordinates
-        output reg [9:0] ballXcoord,
-        output reg [9:0] ballYcoord,
-        output reg [9:0] playerXcoord,
+input btnL,
+    input btnR,
+
+    //coordinates
+    output reg [9:0] ballXcoord,
+    output reg [9:0] ballYcoord,
+    output reg [9:0] playerXcoord,
+    output [9:0] playerYcoord, // NEW: paddle Y coord
+    output [9:0] paddleWidth,  // NEW: constants for renderer
+    output [9:0] paddleHeight, // NEW: constants for renderer
 
         // 7-segment display
         output reg [6:0] seg,
@@ -26,6 +32,10 @@ module Game_Logic(
     localparam COLUMNS = 10;
     localparam BRICK_WIDTH = 52;
     localparam BRICK_HEIGHT = 12;
+
+    assign playerYcoord = PADDLE_Y_COORD;
+    assign paddleWidth = PADDLE_WIDTH;
+    assign paddleHeight = PADDLE_HEIGHT;
 
     reg [13:0] score;
     reg reset_sync1;
@@ -113,6 +123,23 @@ module Game_Logic(
             4'b1111: seg <= 7'b1111111; // "" (blink/blank)
             default: seg <= 7'b1000000; // "0"
         endcase
+    end
+
+    always @(posedge clk) begin //input and movement clock
+        if (rst) begin
+            playerXcoord <= (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
+        end else if (refresh_counter[16]) begin // Basic timer tick (~60Hz on 100MHz clock)
+            if(btnL && playerXcoord > 0)begin
+                playerXcoord <= playerXcoord - PADDLE_SPEED;
+            end
+            if(btnR && playerXcoord < SCREEN_WIDTH - PADDLE_WIDTH) begin
+                playerXcoord <= playerXcoord + PADDLE_SPEED;
+            end
+        end
+    end
+
+    always@(posedge clk) begin //graphics display
+
     end
 
 

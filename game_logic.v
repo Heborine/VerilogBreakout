@@ -17,6 +17,7 @@ module Game_Logic(
     output reg [9:0] playerYcoord, 
     output reg [9:0] paddleWidth,  
     output reg [9:0] paddleHeight, 
+    output wire gameOver,
 
     // 7-Segment Display
     output reg [6:0] seg,

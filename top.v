@@ -9,7 +9,7 @@ module top (
     output wire vsync,
     output wire [2:0] vgaRed,
     output wire [2:0] vgaGreen,
-    output wire [1:0] vgaBlue
+    output wire [1:0] vgaBlue,
     // 7-Segment Score Display
     output wire [6:0] seg,
     output wire [3:0] an
@@ -19,26 +19,33 @@ module top (
     clock_divider clk_div_instantiate (
         .clk (clk),
         .rst (rst),
-        .dclk (clk)
+        .dclk (dclk)
     );
 
     wire [9:0] pixelX;
     wire [9:0] pixelY;
     wire active_video;
+    wire hbp;
+    wire vbp;
 
     vga640x480 vga_instantiate (
         .dclk(dclk),
         .clr(rst),
         .hsync(hsync),
         .vsync(vsync),
+        .red (), //unused
+        .green (), //unused
+        .blue (), //unused
         .pixelX(pixelX),
         .pixelY(pixelY),
-        .valid_drawing_region(active_video)
+        .valid_drawing_region(active_video),
+        .hbp(hbp),
+        .vbp(vbp)
     );
 
-    wire [9:0] playerX, playerY, pWidth, pHeight;
     wire [49:0] activeBricks;
-    wire [9:0] bWidth, bHeight;
+    wire [9:0] playerX, playerY, pWidth, pHeight, ballX, ballY, bWidth, bHeight;
+    wire gameOver;
     Game_Logic game (
         .clk(clk),
         .rst(rst),
@@ -47,10 +54,13 @@ module top (
         .activeBricks(activeBricks),
         .brickWidth(bWidth),
         .brickHeight(bHeight),
+        .ballXcoord(ballX),
+        .ballYcoord(ballY),
         .playerXcoord(playerX),
         .playerYcoord(playerY),
         .paddleWidth(pWidth),
         .paddleHeight(pHeight),
+        .gameOver(gameOver),
         .seg(seg),
         .an(an)
     );

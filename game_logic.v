@@ -17,7 +17,7 @@ module Game_Logic(
     output reg [9:0] playerYcoord, 
     output reg [9:0] paddleWidth,  
     output reg [9:0] paddleHeight, 
-    output wire gameOver,
+    output reg gameOver,
 
     // 7-Segment Display
     output reg [6:0] seg,
@@ -27,12 +27,12 @@ module Game_Logic(
     localparam SCREEN_WIDTH = 640;
     localparam SCREEN_HEIGHT = 480;
     
-    localparam BALL_SIZE = 5;
-    localparam BALL_SPEED = 1;
+    localparam BALL_SIZE = 8;
+    localparam BALL_SPEED = 2;
     localparam PADDLE_WIDTH = SCREEN_WIDTH / 10;
     localparam PADDLE_HEIGHT = SCREEN_HEIGHT / 48;
     localparam PADDLE_Y_COORD = SCREEN_HEIGHT - 20;
-    localparam PADDLE_SPEED = 1;
+    localparam PADDLE_SPEED = 4;
 
     localparam ROWS = 5;
     localparam COLUMNS = 10;

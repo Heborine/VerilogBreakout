@@ -16,7 +16,7 @@ module display_shape (
     output wire inShape,
     output wire [2:0] redOut,
     output wire [2:0] greenOut,
-    output wire [2:0] blueOut
+    output wire [1:0] blueOut
 );
     assign inShape = enabled &&
         (lowerX <= pixelX && pixelX < upperX) &&

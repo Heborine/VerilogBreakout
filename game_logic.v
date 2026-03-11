@@ -217,9 +217,17 @@ module Game_Logic(
             if(nextY < 0) begin
                 nextY = 0;
                 nextVelocityY = BALL_SPEED;
-            end else if(nextY > SCREEN_HEIGHT) begin
+            end else if(nextY > SCREEN_HEIGHT || activeBricks == 50'b0) begin
                 gameOver <= 1;
             end
+
+            //paddle bounce
+            if((nextX + BALL_SIZE > playerXcoord && nextX < playerXcoord + PADDLE_WIDTH) && 
+                (nextY + BALL_SIZE >= PADDLE_Y_COORD && nextY + BALL_SIZE <= PADDLE_Y_COORD + PADDLE_HEIGHT + BALL_SPEED)) begin
+                    nextY = PADDLE_Y_COORD - BALL_SIZE;
+                    nextVelocityY = -1 * BALL_SPEED;
+            end
+
         end
     end
 

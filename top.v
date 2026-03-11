@@ -44,8 +44,7 @@ module top (
     );
 
     wire [49:0] activeBricks;
-    wire [9:0] playerX, playerY, playerWidth, playerHeight, ballX, ballY, brickWidth, brickHeight, brickPadding;
-    wire gameOver;
+    wire [9:0] playerX, playerY, playerWidth, playerHeight, ballX, ballY, ballSz, brickWidth, brickHeight, brickPadding, brickXoffset, brickYoffset, numRows, numCols;    wire gameOver;
     Game_Logic game (
         .clk(clk),
         .rst(rst),
@@ -55,8 +54,13 @@ module top (
         .brickWidth(brickWidth),
         .brickHeight(brickHeight),
         .brickPadding(brickPadding),
+        .numRows(numRows),
+        .numCols(numCols),
+        .brickXoffset(brickXoffset),
+        .brickYoffset(brickYoffset),
         .ballXcoord(ballX),
         .ballYcoord(ballY),
+        .ballSz(ballSz),
         .playerXcoord(playerX),
         .playerYcoord(playerY),
         .paddleWidth(playerWidth),

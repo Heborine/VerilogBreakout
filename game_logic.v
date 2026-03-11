@@ -234,8 +234,7 @@ module Game_Logic(
         end
     end
 
-    reg [10:0] nextX, nextY;
-    reg signed nextVelocityX, nextVelocityY;
+    reg signed [10:0] nextX, nextY, nextVelocityX, nextVelocityY;
     integer row, col;
 
     always @(posedge clk) begin
@@ -248,8 +247,8 @@ module Game_Logic(
             ballDirY <= BALL_SPEED;
             gameOver <= 0;
         end else if(tick && !gameOver) begin
-            nextX = ballXcoord + ballDirX;
-            nextY = ballYcoord + ballDirY;
+            nextX = $signed({1'b0, ballXcoord}) + $signed(ballDirX);
+            nextY = $signed({1'b0, ballYcoord}) + $signed(ballDirY);
             nextVelocityX = ballDirX;
             nextVelocityY = ballDirY;
 

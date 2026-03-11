@@ -44,7 +44,8 @@ module top (
     );
 
     wire [49:0] activeBricks;
-    wire [9:0] playerX, playerY, playerWidth, playerHeight, ballX, ballY, ballSz, brickWidth, brickHeight, brickPadding, brickXoffset, brickYoffset, numRows, numCols;    wire gameOver;
+    wire [9:0] playerX, playerY, playerWidth, playerHeight, ballX, ballY, brickWidth, brickHeight, brickPadding;
+    wire gameOver;
     Game_Logic game (
         .clk(clk),
         .rst(rst),
@@ -54,13 +55,8 @@ module top (
         .brickWidth(brickWidth),
         .brickHeight(brickHeight),
         .brickPadding(brickPadding),
-        .numRows(numRows),
-        .numCols(numCols),
-        .brickXoffset(brickXoffset),
-        .brickYoffset(brickYoffset),
         .ballXcoord(ballX),
         .ballYcoord(ballY),
-        .ballSz(ballSz),
         .playerXcoord(playerX),
         .playerYcoord(playerY),
         .paddleWidth(playerWidth),
@@ -115,20 +111,20 @@ module top (
     wire [49:0] brick_hits;
     genvar row, col;
     generate
-        for (row = 0; row < numRows; row = row + 1) begin : row_loop
-            for (col = 0; col < numCols; col = col + 1) begin : col_loop
+        for (row = 0; row < 5; row = row + 1) begin : row_loop
+            for (col = 0; col < 10; col = col + 1) begin : col_loop
                 display_shape brick_inst (
-                    .enabled(active_video && activeBricks[row * numCols + col]),
+                    .enabled(active_video && activeBricks[row*10 + col]),
                     .pixelX(pixelX),
                     .pixelY(pixelY),
-                    .lowerX(brickXoffset + col * (brickWidth + brickPadding)),
-                    .lowerY(brickYoffset + row * (brickHeight + brickPadding)),
-                    .upperX(brickXoffset + col * (brickWidth + brickPadding) + brickWidth),
-                    .upperY(brickYoffset + row * (brickHeight + brickPadding) + brickHeight),
+                    .lowerX(10'd60 + col * (brickWidth + brickPadding)),
+                    .lowerY(10'd40 + row * (brickHeight + brickPadding)),
+                    .upperX(10'd60 + col * (brickWidth + brickPadding) + brickWidth),
+                    .upperY(10'd40 + row * (brickHeight + brickPadding) + brickHeight),
                     .redVal(3'b111),   // Red bricks
                     .greenVal(3'b000),
                     .blueVal(2'b00),
-                    .inShape(brick_hits[row * numCols + col])
+                    .inShape(brick_hits[row*10 + col])
                 );
             end
         end

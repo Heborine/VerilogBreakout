@@ -18,6 +18,7 @@ module Game_Logic(
     // Coordinates
     output reg [9:0] ballXcoord,
     output reg [9:0] ballYcoord,
+    output wire [9:0] ballSz,
     output reg [9:0] playerXcoord,
     output wire [9:0] playerYcoord, 
     
@@ -58,6 +59,7 @@ module Game_Logic(
     assign numRows = ROWS;
     assign brickXoffset = BRICK_X_OFFSET;
     assign brickYoffset = BRICK_Y_OFFSET;
+    assign ballSz = BALL_SIZE;
 
     reg [13:0] score;
     reg reset_sync1;

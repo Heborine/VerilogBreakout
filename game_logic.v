@@ -291,12 +291,13 @@ module Game_Logic(
                             activeBricks[row * COLUMNS + col] <= 0;
                             score <= score + 10;
                             nextVelocityY = -1 * nextVelocityY;
+                            hit_brick <= 1;
                         end
                     end
                     
                 end
             end
-            brick_hit <= 0;
+            hit_brick <= 0;
             ballXcoord <= nextX;
             ballYcoord <= nextY;
             ballDirX <= nextVelocityX;

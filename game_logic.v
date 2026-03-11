@@ -79,8 +79,10 @@ module Game_Logic(
 
     reg [3:0] LED_DISP;
 
-    reg [5:0] ballDirX;
-    reg [5:0] ballDirY;
+    reg signed [9:0] ballDirX;
+    reg signed [9:0] ballDirY;
+
+    wire [1:0] LED_activating_counter;
 
     task automatic increment_score;
         inout [13:0] score;
@@ -178,7 +180,6 @@ module Game_Logic(
         endcase
     end
 
-
     always @(*) begin
         case(LED_DISP)
             4'b0000: seg <= 7'b1000000; // "0"    
@@ -209,7 +210,7 @@ module Game_Logic(
         end
     end
 
-    reg [9:0] nextX, nextY, nextVelocityX, nextVelocityY;
+    reg signed [9:0] nextX, nextY, nextVelocityX, nextVelocityY;
     integer row, col;
 
     always @(posedge clk) begin
@@ -220,14 +221,14 @@ module Game_Logic(
             nextVelocityY = ballDirY;
 
             //wall bounce
-            if(nextX < 0) begin
+            if($signed(nextX) < 0) begin
                 nextX = 0;
                 nextVelocityX = BALL_SPEED;
             end else if(nextX + BALL_SIZE > SCREEN_WIDTH) begin
                 nextX = SCREEN_WIDTH - BALL_SIZE;
                 nextVelocityX = -1 * BALL_SPEED;
             end
-            if(nextY < 0) begin
+            if($signed(nextY) < 0) begin
                 nextY = 0;
                 nextVelocityY = BALL_SPEED;
             end else if(nextY > SCREEN_HEIGHT || activeBricks == 50'b0) begin

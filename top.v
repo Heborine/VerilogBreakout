@@ -133,9 +133,9 @@ module top (
                     .lowerY(brickYoffset + row * (brickHeight + brickPadding)),
                     .upperX(brickXoffset + col * (brickWidth + brickPadding) + brickWidth),
                     .upperY(brickYoffset + row * (brickHeight + brickPadding) + brickHeight),
-                    .redVal(3'b111),   // Red bricks
-                    .greenVal(3'b000),
-                    .blueVal(2'b00),
+                    .redVal(row == 0 ? 3'b111 : row == 1 ? 3'b000 : row == 2 ? 3'b000 : row == 3 ? 3'b111 : 3'b111),
+                    .greenVal(row == 0 ? 3'b011 : row == 1 ? 3'b111 : row == 2 ? 3'b000 : row == 3 ? 3'b000 : 3'b110),
+                    .blueVal(row == 0 ? 2'b11 : row == 1 ? 2'b00 : row == 2 ? 2'b11 : row == 3 ? 2'b00 : 2'b00),
                     .inShape(brick_hits[row * 10 + col]),
                     .redOut(brick_red[row * 10 + col]),
                     .greenOut(brick_green[row * 10 + col]),

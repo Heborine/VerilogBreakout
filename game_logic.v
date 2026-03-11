@@ -9,6 +9,7 @@ module Game_Logic(
     output reg [49:0] activeBricks,
     output wire [9:0] brickWidth,
     output wire [9:0] brickHeight,
+    output wire [9:0] brickPadding,
 
     // Coordinates
     output reg [9:0] ballXcoord,
@@ -39,12 +40,14 @@ module Game_Logic(
     localparam COLUMNS = 10;
     localparam BRICK_WIDTH = 52;
     localparam BRICK_HEIGHT = 12;
+    localparam BRICK_PADDING = 2;
 
     assign playerYcoord = PADDLE_Y_COORD;
     assign paddleWidth = PADDLE_WIDTH;
     assign paddleHeight = PADDLE_HEIGHT;
     assign brickWidth = BRICK_WIDTH;
     assign brickHeight = BRICK_HEIGHT;
+    assign brickPadding = BRICK_PADDING;
 
     reg [13:0] score;
     reg reset_sync1;
@@ -63,7 +66,6 @@ module Game_Logic(
     reg btnR_sync2;
     reg btnR_debounce;
     reg [16:0] debounce_count_btnR;
-
 
     reg [3:0] LED_DISP;
 
@@ -188,7 +190,7 @@ module Game_Logic(
         if (rst) begin
             playerXcoord <= (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
         end else if (refresh_counter[16]) begin // only counts at refresh rate
-            if(btnL_debounce && playerXcoord > 0)begin
+            if(btnL_debounce && playerXcoord > 0) begin
                 playerXcoord <= playerXcoord - PADDLE_SPEED;
             end
             if(btnR_debounce && playerXcoord < SCREEN_WIDTH - PADDLE_WIDTH) begin
@@ -198,6 +200,7 @@ module Game_Logic(
     end
 
     reg [9:0] nextX, nextY, nextVelocityX, nextVelocityY;
+    integer row, col;
 
     always @(posedge clk) begin
         if(!gameOver) begin
@@ -228,6 +231,14 @@ module Game_Logic(
                     nextVelocityY = -1 * BALL_SPEED;
             end
 
+            // brick collisions
+            for (row = 0; row < ROWS; row = row + 1) begin
+                for (col = 0; col < COLUMNS; col = col + 1) begin
+                    if(activeBricks[row*COLUMNS + col]) begin
+                        // if(nextX + BALL_SIZE > )
+                    end
+                end
+            end
         end
     end
 

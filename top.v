@@ -44,7 +44,7 @@ module top (
     );
 
     wire [49:0] activeBricks;
-    wire [9:0] playerX, playerY, pWidth, pHeight, ballX, ballY, bWidth, bHeight;
+    wire [9:0] playerX, playerY, playerWidth, playerHeight, ballX, ballY, brickWidth, brickHeight, brickPadding;
     wire gameOver;
     Game_Logic game (
         .clk(clk),
@@ -52,22 +52,23 @@ module top (
         .btnL(btnL),
         .btnR(btnR),
         .activeBricks(activeBricks),
-        .brickWidth(bWidth),
-        .brickHeight(bHeight),
+        .brickWidth(brickWidth),
+        .brickHeight(brickHeight),
+        .brickPadding(brickPadding),
         .ballXcoord(ballX),
         .ballYcoord(ballY),
         .playerXcoord(playerX),
         .playerYcoord(playerY),
-        .paddleWidth(pWidth),
-        .paddleHeight(pHeight),
+        .paddleWidth(playerWidth),
+        .paddleHeight(playerHeight),
         .gameOver(gameOver),
         .seg(seg),
         .an(an)
     );
 
     wire paddle_on;
-    wire [2:0] pRed, pGreen;
-    wire [1:0] pBlue;
+    wire [2:0] playerRed, playerGreen;
+    wire [1:0] playerBlue;
 
     display_shape paddle_render (
         .enabled(active_video),
@@ -75,15 +76,15 @@ module top (
         .pixelY(pixelY),
         .lowerX(playerX),
         .lowerY(playerY),
-        .upperX(playerX + pWidth),
-        .upperY(playerY + pHeight),
+        .upperX(playerX + playerWidth),
+        .upperY(playerY + playerHeight),
         .redVal(3'b111), // White paddle
         .greenVal(3'b111),
         .blueVal(2'b11),
         .inShape(paddle_on),
-        .redOut(pRed),
-        .greenOut(pGreen),
-        .blueOut(pBlue)
+        .redOut(playerRed),
+        .greenOut(playerGreen),
+        .blueOut(playerBlue)
     );
 
     integer i;
@@ -96,10 +97,10 @@ module top (
                     .enabled(active_video && activeBricks[row*10 + col]),
                     .pixelX(pixelX),
                     .pixelY(pixelY),
-                    .lowerX(10'd60 + col * (bWidth + 2)),
-                    .lowerY(10'd40 + row * (bHeight + 2)),
-                    .upperX(10'd60 + col * (bWidth + 2) + bWidth),
-                    .upperY(10'd40 + row * (bHeight + 2) + bHeight),
+                    .lowerX(10'd60 + col * (brickWidth + brickPadding)),
+                    .lowerY(10'd40 + row * (brickHeight + brickPadding)),
+                    .upperX(10'd60 + col * (brickWidth + brickPadding) + brickWidth),
+                    .upperY(10'd40 + row * (brickHeight + brickPadding) + brickHeight),
                     .redVal(3'b111),   // Red bricks
                     .greenVal(3'b000),
                     .blueVal(2'b00),

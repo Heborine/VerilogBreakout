@@ -85,6 +85,18 @@ module Game_Logic(
     reg signed [9:0] ballDirX;
     reg signed [9:0] ballDirY;
 
+    initial begin
+        refresh_counter = 0;
+        score = 0;
+        activeBricks = 50'h3FFFFFFFFFFFF; // Reset all bricks to alive (2^50-1)
+        ballXcoord = SCREEN_WIDTH / 2;
+        ballYcoord = SCREEN_HEIGHT / 2;
+        ballDirX = BALL_SPEED;
+        ballDirY = BALL_SPEED;
+        gameOver = 0;
+        playerXcoord = (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
+    end
+
     wire [1:0] LED_activating_counter;
 
     reg [20:0] ticks_count;

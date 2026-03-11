@@ -87,6 +87,26 @@ module top (
         .blueOut(playerBlue)
     );
 
+    wire [2:0] ballRed, ballGreen;
+    wire [1:0] ballBlue;
+
+    display_shape ball(
+        .enabled(1'b1),
+        .pixelX(pixelX),
+        .pixelY(pixelY),
+        .lowerX(ballX),
+        .lowerY(ballY),
+        .upperX(ballX + ballSz),
+        .upperY(ballY + ballSz),
+        .redVal(3'b111), // White paddle
+        .greenVal(3'b111),
+        .blueVal(2'b11),
+        .inShape(1'b1),
+        .redOut(ballRed),
+        .greenOut(ballGreen),
+        .blueOut(ballBlue)
+    );
+
     integer i;
     wire [49:0] brick_hits;
     genvar row, col;

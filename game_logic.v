@@ -48,6 +48,7 @@ module Game_Logic(
     localparam BRICK_PADDING = 2;
     localparam BRICK_X_OFFSET = 60;
     localparam BRICK_Y_OFFSET = 40;
+    localparam MAX_TICKS = 1666667;
 
     assign playerYcoord = PADDLE_Y_COORD;
     assign paddleWidth = PADDLE_WIDTH;
@@ -85,6 +86,20 @@ module Game_Logic(
     reg signed [9:0] ballDirY;
 
     wire [1:0] LED_activating_counter;
+
+    reg [20:0] ticks_count;
+    reg tick;
+
+    // limit to 60 Hz
+    always @(posedge clk) begin
+        if(ticks_count >= TICK_MAX - 1) begin
+            tick_count <= 0;
+            tick <= 1;
+        end else begin
+            tick_count <= tick_count + 1;
+            tick <= 0;
+        end
+    end
 
     task automatic increment_score;
         inout [13:0] score;
@@ -216,7 +231,7 @@ module Game_Logic(
     integer row, col;
 
     always @(posedge clk) begin
-        if(!gameOver) begin
+        if(!gameOver && tick) begin
             nextX = ballXcoord + ballDirX;
             nextY = ballYcoord + ballDirY;
             nextVelocityX = ballDirX;

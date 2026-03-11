@@ -155,4 +155,33 @@ module Game_Logic(
         end
     end
 
+    reg [9:0] nextX, nextY, nextVelocityX, nextVelocityY;
+
+    always @(posedge clk) begin
+        if(!gameOver) begin
+            nextX = ballXcoord + ballDirX;
+            nextY = ballYcoord + ballDirY;
+            nextVelocityX = ballDirX;
+            nextVelocityY = ballDirY;
+
+            //wall bounce
+            if(nextX < 0) begin
+                nextX = 0;
+                nextVelocityX = BALL_SPEED;
+            end else if(nextX + BALL_SIZE > SCREEN_WIDTH) begin
+                nextX = SCREEN_WIDTH - BALL_SIZE;
+                nextVelocityX = -1 * BALL_SPEED;
+            end
+            if(nextY < 0) begin
+                nextY = 0;
+                nextVelocityY = BALL_SPEED;
+            end else if(nextY > SCREEN_HEIGHT) begin
+                gameOver <= 1;
+            end
+        end
+    end
+
+
+
+
 endmodule

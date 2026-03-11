@@ -95,6 +95,7 @@ module Game_Logic(
         ballDirY = BALL_SPEED;
         gameOver = 0;
         playerXcoord = (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
+        hit_brick = 0;
     end
 
     wire [1:0] LED_activating_counter;
@@ -237,6 +238,7 @@ module Game_Logic(
 
     reg signed [10:0] nextX, nextY, nextVelocityX, nextVelocityY;
     integer row, col;
+    reg hit_brick;
 
     always @(posedge clk) begin
         if(rst) begin
@@ -247,6 +249,7 @@ module Game_Logic(
             ballDirX <= BALL_SPEED;
             ballDirY <= BALL_SPEED;
             gameOver <= 0;
+            hit_brick <= 0;
         end else if(tick && !gameOver) begin
             nextX = $signed({1'b0, ballXcoord}) + $signed(ballDirX);
             nextY = $signed({1'b0, ballYcoord}) + $signed(ballDirY);
@@ -279,7 +282,7 @@ module Game_Logic(
 
             for (row = 0; row < ROWS; row = row + 1) begin
                 for (col = 0; col < COLUMNS; col = col + 1) begin
-                    if(activeBricks[row * COLUMNS + col]) begin
+                    if(!hit_brick && activeBricks[row * COLUMNS + col]) begin
                         if((nextX + BALL_SIZE > (col * (BRICK_WIDTH + BRICK_PADDING) + BRICK_X_OFFSET)) &&
                             (nextX < (col * (BRICK_WIDTH + BRICK_PADDING) + BRICK_X_OFFSET + BRICK_WIDTH)) &&
                             (nextY + BALL_SIZE > (row * (BRICK_HEIGHT + BRICK_PADDING) + BRICK_Y_OFFSET)) &&
@@ -293,6 +296,7 @@ module Game_Logic(
                     
                 end
             end
+            brick_hit <= 0;
             ballXcoord <= nextX;
             ballYcoord <= nextY;
             ballDirX <= nextVelocityX;

@@ -28,9 +28,7 @@ module vga640x480(
 	output reg [1:0] blue,	//blue vga output
 	output wire [9:0] pixelX,
 	output wire [9:0] pixelY,
-	output wire valid_drawing_region,
-	output wire hbp,
-	output wire vbp
+	output wire valid_drawing_region
 	);
 
 // video structure constants

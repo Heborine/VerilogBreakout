@@ -92,11 +92,11 @@ module Game_Logic(
 
     // limit to 60 Hz
     always @(posedge clk) begin
-        if(ticks_count >= TICK_MAX - 1) begin
-            tick_count <= 0;
+        if(ticks_count >= MAX_TICKS - 1) begin
+            ticks_count <= 0;
             tick <= 1;
         end else begin
-            tick_count <= tick_count + 1;
+            ticks_count <= ticks_count + 1;
             tick <= 0;
         end
     end
@@ -238,14 +238,14 @@ module Game_Logic(
             nextVelocityY = ballDirY;
 
             //wall bounce
-            if($signed(nextX) < 0) begin
+            if(nextX < 0) begin
                 nextX = 0;
                 nextVelocityX = BALL_SPEED;
             end else if(nextX + BALL_SIZE > SCREEN_WIDTH) begin
                 nextX = SCREEN_WIDTH - BALL_SIZE;
                 nextVelocityX = -1 * BALL_SPEED;
             end
-            if($signed(nextY) < 0) begin
+            if(nextY < 0) begin
                 nextY = 0;
                 nextVelocityY = BALL_SPEED;
             end else if(nextY > SCREEN_HEIGHT || activeBricks == 50'b0) begin

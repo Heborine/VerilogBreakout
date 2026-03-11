@@ -244,11 +244,23 @@ module Game_Logic(
             // brick collisions
             for (row = 0; row < ROWS; row = row + 1) begin
                 for (col = 0; col < COLUMNS; col = col + 1) begin
-                    if(activeBricks[row*COLUMNS + col]) begin
-                        // if(nextX + BALL_SIZE > )
+                    if(activeBricks[row * COLUMNS + col]) begin
+                        if((nextX + BALL_SIZE > (col * (BRICK_WIDTH + BRICK_PADDING) + BRICK_X_OFFSET)) &&
+                            (nextX < (col * (BRICK_WIDTH + BRICK_PADDING) + BRICK_X_OFFSET + BRICK_WIDTH)) &&
+                            (nextY + BALL_SIZE > (row * (BRICK_HEIGHT + BRICK_PADDING) + BRICK_Y_OFFSET)) &&
+                            (nextY < (row * (BRICK_HEIGHT + BRICK_PADDING) + BRICK_Y_OFFSET + BRICK_HEIGHT))
+                        ) begin
+                            activeBricks[row * COLUMNS + col] <= 0;
+                            score <= score + 10;
+                            nextVelocityY = -nextVelocityY;
+                        end
                     end
                 end
             end
+            ballXcoord <= nextX;
+            ballYcoord <= nextY;
+            ballDirX <= nextVelocityX;
+            ballDirY <= nextVelocityY;
         end
     end
 

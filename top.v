@@ -44,7 +44,7 @@ module top (
     );
 
     wire [49:0] activeBricks;
-    wire [9:0] playerX, playerY, playerWidth, playerHeight, ballX, ballY, ballSz, brickWidth, brickHeight, brickPadding, brickXoffset, brickYoffset, numRows, numCols;
+    wire [9:0] playerX, playerY, playerWidth, playerHeight, ballX, ballY, brickWidth, brickHeight, brickPadding;
     wire gameOver;
     Game_Logic game (
         .clk(clk),
@@ -55,13 +55,8 @@ module top (
         .brickWidth(brickWidth),
         .brickHeight(brickHeight),
         .brickPadding(brickPadding),
-        .numRows(numRows),
-        .numCols(numCols),
-        .brickXoffset(brickXoffset),
-        .brickYoffset(brickYoffset),
         .ballXcoord(ballX),
         .ballYcoord(ballY),
-        .ballSz(ballSz),
         .playerXcoord(playerX),
         .playerYcoord(playerY),
         .paddleWidth(playerWidth),
@@ -102,10 +97,10 @@ module top (
                     .enabled(active_video && activeBricks[row*10 + col]),
                     .pixelX(pixelX),
                     .pixelY(pixelY),
-                    .lowerX(brickXoffset + col * (brickWidth + brickPadding)),
-                    .lowerY(brickYoffset + row * (brickHeight + brickPadding)),
-                    .upperX(brickXoffset + col * (brickWidth + brickPadding) + brickWidth),
-                    .upperY(brickYoffset + row * (brickHeight + brickPadding) + brickHeight),
+                    .lowerX(10'd60 + col * (brickWidth + brickPadding)),
+                    .lowerY(10'd40 + row * (brickHeight + brickPadding)),
+                    .upperX(10'd60 + col * (brickWidth + brickPadding) + brickWidth),
+                    .upperY(10'd40 + row * (brickHeight + brickPadding) + brickHeight),
                     .redVal(3'b111),   // Red bricks
                     .greenVal(3'b000),
                     .blueVal(2'b00),

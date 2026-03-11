@@ -12,7 +12,7 @@ module display_shape (
     input wire [2:0] redVal,
     input wire [2:0] greenVal,
     input wire [1:0] blueVal, 
-2
+
     output wire inShape,
     output wire [2:0] redOut,
     output wire [2:0] greenOut,

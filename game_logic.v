@@ -216,7 +216,7 @@ module Game_Logic(
     integer row, col;
 
     always @(posedge clk) begin
-        if(!gameOver) begin
+        if(!gameOver && refresh_counter[16]) begin
             nextX = ballXcoord + ballDirX;
             nextY = ballYcoord + ballDirY;
             nextVelocityX = ballDirX;
@@ -255,7 +255,9 @@ module Game_Logic(
                         ) begin
                             activeBricks[row * COLUMNS + col] <= 0;
                             score <= score + 10;
-                            nextVelocityY = -nextVelocityY;
+                            if(nextVelocityY > 0)begin //make sure hitting 2 blocks won't make it keep going it
+                                nextVelocityY = -nextVelocityY;
+                            end
                         end
                     end
                 end

@@ -133,7 +133,7 @@ module Game_Logic(
         btnR_sync1 <= btnR;
         btnR_sync2 <= btnR_sync1;
 
-        if(reset_debounce != reset_sync2) begin
+        if(reset_debounce != reset_sync2 && !gameOver) begin
             debounce_count_reset <= debounce_count_reset + 1;
             //1ms = 0.001s 
             //0.001 * 100000000 = 100000 cycles
@@ -147,7 +147,7 @@ module Game_Logic(
 
         reset_prev <= reset_debounce;
 
-        if(btnL_debounce != btnL_sync2) begin
+        if(btnL_debounce != btnL_sync2 && !gameOver) begin
             debounce_count_btnL <= debounce_count_btnL + 1;
             //1ms = 0.001s 
             //0.001 * 100000000 = 100000 cycles
@@ -224,6 +224,7 @@ module Game_Logic(
     always @(posedge clk) begin 
         if (rst) begin
             playerXcoord <= (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
+            
         end else if (tick) begin // only counts at refresh rate
             if(btnL_debounce && playerXcoord > 0) begin
                 playerXcoord <= playerXcoord - PADDLE_SPEED;

@@ -53,6 +53,18 @@ module Game_Logic(
     reg reset_prev;
     reg [16:0] debounce_count_reset;
     reg [19:0] refresh_counter;
+
+    reg btnL_sync1;
+    reg btnL_sync2;
+    reg btnL_debounce;
+    reg [16:0] debounce_count_btnL;
+
+    reg btnR_sync1;
+    reg btnR_sync2;
+    reg btnR_debounce;
+    reg [16:0] debounce_count_btnR;
+
+
     reg [3:0] LED_DISP;
 
     reg [5:0] ballDirX;
@@ -70,6 +82,12 @@ module Game_Logic(
         reset_sync1 <= rst;
         reset_sync2 <= reset_sync1;
 
+        btnL_sync1 <= btnL;
+        btnL_sync2 <= btnL_sync1;
+
+        btnR_sync1 <= btnR;
+        btnR_sync2 <= btnR_sync1;
+
         if(reset_debounce != reset_sync2) begin
             debounce_count_reset <= debounce_count_reset + 1;
             //1ms = 0.001s 
@@ -83,6 +101,30 @@ module Game_Logic(
         end
 
         reset_prev <= reset_debounce;
+
+        if(btnL_debounce != btnL_sync2) begin
+            debounce_count_btnL <= debounce_count_btnL + 1;
+            //1ms = 0.001s 
+            //0.001 * 100000000 = 100000 cycles
+            if(debounce_count_btnL >= 17'd100000) begin
+                debounce_count_btnL <= 0;
+                btnL_debounce <= btnL_sync2;
+            end
+        end else begin
+            debounce_count_btnL <= 0;
+        end
+
+        if(btnR_debounce != btnR_sync2) begin
+            debounce_count_btnR <= debounce_count_btnR + 1;
+            //1ms = 0.001s 
+            //0.001 * 100000000 = 100000 cycles
+            if(debounce_count_btnR >= 17'd100000) begin
+                debounce_count_btnR <= 0;
+                btnR_debounce <= btnR_sync2;
+            end
+        end else begin
+            debounce_count_btnR <= 0;
+        end
 
         if (reset_debounce && !reset_prev) begin
             refresh_counter <= 0;

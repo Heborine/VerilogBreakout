@@ -7,16 +7,17 @@ module Game_Logic(
     input btnR,
 
     output reg [49:0] activeBricks,
-    output [9:0] brickWidth,
-    output [9:0] brickHeight,
+    output wire [9:0] brickWidth,
+    output wire [9:0] brickHeight,
 
     // Coordinates
     output reg [9:0] ballXcoord,
     output reg [9:0] ballYcoord,
     output reg [9:0] playerXcoord,
-    output reg [9:0] playerYcoord, 
-    output reg [9:0] paddleWidth,  
-    output reg [9:0] paddleHeight, 
+    output wire [9:0] playerYcoord, 
+    
+    output wire [9:0] paddleWidth,  
+    output wire [9:0] paddleHeight, 
     output reg gameOver,
 
     // 7-Segment Display
@@ -66,7 +67,6 @@ module Game_Logic(
     endtask
 
     always @(posedge clk) begin
-        refresh_counter <= refresh_counter + 1;
         reset_sync1 <= rst;
         reset_sync2 <= reset_sync1;
 
@@ -88,6 +88,11 @@ module Game_Logic(
             refresh_counter <= 0;
             score <= 0;
             activeBricks <= 50'h3FFFFFFFFFFFF; // Reset all bricks to alive (2^50-1)
+            ballXcoord <= SCREEN_WIDTH / 2;
+            ballYcoord <= SCREEN_HEIGHT / 2;
+            ballDirX <= BALL_SPEED;
+            ballDirY <= BALL_SPEED;
+            gameOver <= 0;
         end else begin
             refresh_counter <= refresh_counter + 1;
         end
@@ -137,7 +142,7 @@ module Game_Logic(
         endcase
     end
 
-    always @(posedge clk) begin //input and movement clock
+    always @(posedge clk) begin 
         if (rst) begin
             playerXcoord <= (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
         end else if (refresh_counter[16]) begin // only counts at refresh rate

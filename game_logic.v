@@ -10,6 +10,10 @@ module Game_Logic(
     output wire [9:0] brickWidth,
     output wire [9:0] brickHeight,
     output wire [9:0] brickPadding,
+    output wire [9:0] numRows,
+    output wire [9:0] numCols,
+    output wire [9:0] brickXoffset,
+    output wire [9:0] brickYoffset,
 
     // Coordinates
     output reg [9:0] ballXcoord,
@@ -41,6 +45,8 @@ module Game_Logic(
     localparam BRICK_WIDTH = 52;
     localparam BRICK_HEIGHT = 12;
     localparam BRICK_PADDING = 2;
+    localparam BRICK_X_OFFSET = 60;
+    localparam BRICK_Y_OFFSET = 40;
 
     assign playerYcoord = PADDLE_Y_COORD;
     assign paddleWidth = PADDLE_WIDTH;
@@ -48,6 +54,10 @@ module Game_Logic(
     assign brickWidth = BRICK_WIDTH;
     assign brickHeight = BRICK_HEIGHT;
     assign brickPadding = BRICK_PADDING;
+    assign numCols = COLUMNS;
+    assign numRows = ROWS;
+    assign brickXoffset = BRICK_X_OFFSET;
+    assign brickYoffset = BRICK_Y_OFFSET;
 
     reg [13:0] score;
     reg reset_sync1;

@@ -178,7 +178,7 @@ module Game_Logic(
         end
     end
 
-    assign LED_activating_counter = refresh_counter[19:18];
+    assign LED_activating_counter = refresh_counter[16:15];
 
     always @(*) begin
         case(LED_activating_counter)
@@ -234,7 +234,8 @@ module Game_Logic(
         end
     end
 
-    reg signed [10:0] nextX, nextY, nextVelocityX, nextVelocityY;
+    reg [10:0] nextX, nextY;
+    reg signed nextVelocityX, nextVelocityY;
     integer row, col;
 
     always @(posedge clk) begin
@@ -275,7 +276,7 @@ module Game_Logic(
             end
 
             // brick collisions
-            
+
             for (row = 0; row < ROWS; row = row + 1) begin
                 for (col = 0; col < COLUMNS; col = col + 1) begin
                     if(activeBricks[row * COLUMNS + col]) begin

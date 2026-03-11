@@ -48,7 +48,7 @@ module Game_Logic(
     localparam BRICK_PADDING = 2;
     localparam BRICK_X_OFFSET = 60;
     localparam BRICK_Y_OFFSET = 40;
-    localparam MAX_TICKS = 1666667;
+    localparam MAX_TICKS = 416667;
 
     assign playerYcoord = PADDLE_Y_COORD;
     assign paddleWidth = PADDLE_WIDTH;
@@ -104,12 +104,17 @@ module Game_Logic(
 
     // limit to 60 Hz
     always @(posedge clk) begin
-        if(ticks_count >= MAX_TICKS - 1) begin
+        if (rst) begin
             ticks_count <= 0;
-            tick <= 1;
-        end else begin
-            ticks_count <= ticks_count + 1;
             tick <= 0;
+        end else begin
+            if(ticks_count >= MAX_TICKS - 1) begin
+                ticks_count <= 0;
+                tick <= 1;
+            end else begin
+                ticks_count <= ticks_count + 1;
+                tick <= 0;
+            end
         end
     end
 
@@ -229,7 +234,7 @@ module Game_Logic(
     always @(posedge clk) begin 
         if (rst) begin
             playerXcoord <= (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
-        end else if (refresh_counter[16]) begin // only counts at refresh rate
+        end else if (tick) begin 
             if(btnL_debounce && playerXcoord > 0) begin
                 playerXcoord <= playerXcoord - PADDLE_SPEED;
             end
@@ -242,10 +247,13 @@ module Game_Logic(
     reg signed [9:0] nextX, nextY, nextVelocityX, nextVelocityY;
     integer row, col;
 
+    always @(*) begin
+        nextX = ballXcoord + ballDirX;
+        nextY = ballYcoord + ballDirY;
+    end
+
     always @(posedge clk) begin
         if(!gameOver && tick) begin
-            nextX = ballXcoord + ballDirX;
-            nextY = ballYcoord + ballDirY;
             nextVelocityX = ballDirX;
             nextVelocityY = ballDirY;
 

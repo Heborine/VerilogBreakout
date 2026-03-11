@@ -270,7 +270,7 @@ module Game_Logic(
                         ) begin
                             activeBricks[row * COLUMNS + col] <= 0;
                             score <= score + 10;
-                            nextVelocityY = -nextVelocityY;
+                            nextVelocityY = -1 * nextVelocityY;
                         end
                     end
                 end

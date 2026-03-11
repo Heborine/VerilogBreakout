@@ -48,7 +48,7 @@ module Game_Logic(
     localparam BRICK_PADDING = 2;
     localparam BRICK_X_OFFSET = 60;
     localparam BRICK_Y_OFFSET = 40;
-    localparam MAX_TICKS = 1666667;
+    localparam MAX_TICKS = 416667;
 
     assign playerYcoord = PADDLE_Y_COORD;
     assign paddleWidth = PADDLE_WIDTH;
@@ -224,7 +224,7 @@ module Game_Logic(
     always @(posedge clk) begin 
         if (rst) begin
             playerXcoord <= (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
-        end else if (refresh_counter[16]) begin // only counts at refresh rate
+        end else if (tick) begin // only counts at refresh rate
             if(btnL_debounce && playerXcoord > 0) begin
                 playerXcoord <= playerXcoord - PADDLE_SPEED;
             end
@@ -234,7 +234,7 @@ module Game_Logic(
         end
     end
 
-    reg signed [9:0] nextX, nextY, nextVelocityX, nextVelocityY;
+    reg signed [10:0] nextX, nextY, nextVelocityX, nextVelocityY;
     integer row, col;
 
     always @(posedge clk) begin
@@ -275,6 +275,7 @@ module Game_Logic(
             end
 
             // brick collisions
+            
             for (row = 0; row < ROWS; row = row + 1) begin
                 for (col = 0; col < COLUMNS; col = col + 1) begin
                     if(activeBricks[row * COLUMNS + col]) begin
@@ -285,9 +286,7 @@ module Game_Logic(
                         ) begin
                             activeBricks[row * COLUMNS + col] <= 0;
                             score <= score + 10;
-                            if(nextVelocityY > 0)begin //make sure hitting 2 blocks won't make it keep going it
-                                nextVelocityY = -1 * nextVelocityY;
-                            end
+                            nextVelocityY = -1 * nextVelocityY;
                         end
                     end
                     

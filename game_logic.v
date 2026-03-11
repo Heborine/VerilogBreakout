@@ -279,7 +279,7 @@ module Game_Logic(
             end
 
             // brick collisions
-
+            hit_brick = 0;
             for (row = 0; row < ROWS; row = row + 1) begin
                 for (col = 0; col < COLUMNS; col = col + 1) begin
                     if(!hit_brick && activeBricks[row * COLUMNS + col]) begin
@@ -291,7 +291,7 @@ module Game_Logic(
                             activeBricks[row * COLUMNS + col] <= 0;
                             score <= score + 10;
                             nextVelocityY = -1 * nextVelocityY;
-                            hit_brick <= 1;
+                            hit_brick = 1;
                         end
                     end
                     

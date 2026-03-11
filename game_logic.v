@@ -48,6 +48,7 @@ module Game_Logic(
     localparam BRICK_PADDING = 2;
     localparam BRICK_X_OFFSET = 60;
     localparam BRICK_Y_OFFSET = 40;
+    localparam MAX_TICKS = 1666667;
 
     assign playerYcoord = PADDLE_Y_COORD;
     assign paddleWidth = PADDLE_WIDTH;
@@ -85,6 +86,20 @@ module Game_Logic(
     reg signed [9:0] ballDirY;
 
     wire [1:0] LED_activating_counter;
+
+    reg [20:0] ticks_count;
+    reg tick;
+
+    // limit to 60 Hz
+    always @(posedge clk) begin
+        if(ticks_count >= MAX_TICKS - 1) begin
+            ticks_count <= 0;
+            tick <= 1;
+        end else begin
+            ticks_count <= ticks_count + 1;
+            tick <= 0;
+        end
+    end
 
     task automatic increment_score;
         inout [13:0] score;
@@ -216,21 +231,21 @@ module Game_Logic(
     integer row, col;
 
     always @(posedge clk) begin
-        if(!gameOver && refresh_counter[16]) begin
+        if(!gameOver && tick) begin
             nextX = ballXcoord + ballDirX;
             nextY = ballYcoord + ballDirY;
             nextVelocityX = ballDirX;
             nextVelocityY = ballDirY;
 
             //wall bounce
-            if($signed(nextX) < 0) begin
+            if(nextX < 0) begin
                 nextX = 0;
                 nextVelocityX = BALL_SPEED;
             end else if(nextX + BALL_SIZE > SCREEN_WIDTH) begin
                 nextX = SCREEN_WIDTH - BALL_SIZE;
                 nextVelocityX = -1 * BALL_SPEED;
             end
-            if($signed(nextY) < 0) begin
+            if(nextY < 0) begin
                 nextY = 0;
                 nextVelocityY = BALL_SPEED;
             end else if(nextY > SCREEN_HEIGHT || activeBricks == 50'b0) begin
@@ -256,7 +271,7 @@ module Game_Logic(
                             activeBricks[row * COLUMNS + col] <= 0;
                             score <= score + 10;
                             if(nextVelocityY > 0)begin //make sure hitting 2 blocks won't make it keep going it
-                                nextVelocityY = -nextVelocityY;
+                                nextVelocityY = -1 * nextVelocityY;
                             end
                         end
                     end

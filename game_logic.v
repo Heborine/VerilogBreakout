@@ -188,10 +188,10 @@ module Game_Logic(
         if (rst) begin
             playerXcoord <= (SCREEN_WIDTH / 2) - (PADDLE_WIDTH / 2);
         end else if (refresh_counter[16]) begin // only counts at refresh rate
-            if(btnL && playerXcoord > 0)begin
+            if(btnL_debounce && playerXcoord > 0)begin
                 playerXcoord <= playerXcoord - PADDLE_SPEED;
             end
-            if(btnR && playerXcoord < SCREEN_WIDTH - PADDLE_WIDTH) begin
+            if(btnR_debounce && playerXcoord < SCREEN_WIDTH - PADDLE_WIDTH) begin
                 playerXcoord <= playerXcoord + PADDLE_SPEED;
             end
         end
@@ -222,8 +222,5 @@ module Game_Logic(
             end
         end
     end
-
-
-
 
 endmodule

@@ -51,7 +51,7 @@ module top (
     wire gameOver;
 
     Game_Logic game (
-        .clk(clk),
+        .clk(dclk),
         .rst(rst),
         .btnL(btnL),
         .btnR(btnR),
